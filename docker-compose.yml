@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongodb/mongodb-atlas-local:${MONGO_IMAGE_TAG}
+    container_name: mongodb-atlas-local
+    ports:
+      - "${MONGO_PORT}:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+volumes:
+  mongodb_data:
+  mongodb_config:
